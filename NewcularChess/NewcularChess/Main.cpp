@@ -1,3 +1,9 @@
+/*
+Richie Schiano
+CSc 180
+Project 2
+Name: Blind Man
+*/
 #include <iostream>
 #include <stdlib.h>
 using namespace std;
@@ -566,7 +572,7 @@ void moveGen(int turn, int depth) {
 						}
 						if (j > 0)
 						{
-							if (gb[i + 1][j - 1] == 'p' || gb[i + 1][j - 1] == 'n' || gb[i - 1][j - 1] == 'b' ||
+							if (gb[i + 1][j - 1] == 'p' || gb[i + 1][j - 1] == 'n' || gb[i + 1][j - 1] == 'b' ||
 								gb[i + 1][j - 1] == 'r' || gb[i + 1][j - 1] == 'k')
 							{
 								mvCol = mv[depth][0] * mvSize;
@@ -1031,13 +1037,6 @@ void moveGen(int turn, int depth) {
 				switch (p)
 				{
 				case 'p':
-					mvCol = mv[depth][0] * mvSize;
-					mv[depth][mvCol + 1] = 2;
-					mv[depth][mvCol + 2] = i;
-					mv[depth][mvCol + 3] = j;
-					mv[depth][mvCol + 4] = i;
-					mv[depth][mvCol + 5] = j;
-					mv[depth][0]++;
 					if (i > 0)
 					{
 						if (gb[i - 1][j] == '-')
@@ -1053,7 +1052,7 @@ void moveGen(int turn, int depth) {
 						}
 						if (j < 6)
 						{
-							if (gb[i - 1][j + 1] == 'P' || gb[i - 1][j + 1] == 'N' || gb[i - 1][j + 1] == 'B' ||
+							if (gb[i - 1][j + 1] == 'P' || gb[i - 1][j + 1] == 'N' || gb[i + 1][j + 1] == 'B' ||
 								gb[i - 1][j + 1] == 'R' || gb[i - 1][j + 1] == 'K')
 							{
 								mvCol = mv[depth][0] * mvSize;
