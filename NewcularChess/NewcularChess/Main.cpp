@@ -2,7 +2,7 @@
 Richie Schiano
 CSc 180
 Project 2
-Name: Blind Man
+Name: Swoop
 */
 #include <iostream>
 #include <stdlib.h>
@@ -120,8 +120,8 @@ void makeMove() {
 			gb[mi][mj] = gb[ma][mb];
 			gb[ma][mb] = '-';
 			score = min(depth + 1, best);
-			cout << ma << mb << " " << mi << mj << endl;
-			cout << "Score: " << score << endl;
+		//	cout << ma << mb << " " << mi << mj << endl;
+		//  cout << "Score: " << score << endl;
 			if (score > best) {
 				myMove = i;
 				best = score;
@@ -145,8 +145,8 @@ void makeMove() {
 			gb[mi][mj] = gb[ma][mb];
 			gb[ma][mb] = '-';
 			score = min(depth + 1, best);
-			cout << ma << mb << " " << mi << mj << endl;
-			cout << "Score: " << score << endl;
+		//	cout << ma << mb << " " << mi << mj << endl;
+		//	cout << "Score: " << score << endl;
 			if (score > best) {
 				myMove = i;
 				best = score;
@@ -166,7 +166,7 @@ void makeMove() {
 				// make move
 				explode(ma, mb, depth);
 				score = min(depth + 1, best);
-				cout << ma << mb << " " << mi << mj << endl;
+			//	cout << ma << mb << " " << mi << mj << endl;
 				cout << "Score: " << score << endl;
 				if (score > best) {
 					myMove = i;
@@ -231,7 +231,7 @@ void makeMove() {
 		gb[mj][mi] = gb[mb][ma];
 		gb[mb][ma] = '-';
 	}
-	cout << "My move is: " << a << c << " " << b << d << endl;
+	//cout << "My move is: " << a << c << " " << b << d << endl;
 	moveTranslator(ma, mb, mi, mj);
 }
 
@@ -239,7 +239,7 @@ void makeMove() {
 int min(int depth, int bestScore) {
 	int best = 20000, score, ma, mb, mi, mj;
 	char temp;
-	if (check4winner() != -1) return (check4winner());
+	if (check4winner() != -1) return (check4winner() + depth);
 	if (depth == maxDepth) return (evaluate(depth));
 	moveGen(1, depth);
 	for (int i = 0; i < mv[depth][0]; i++) {
@@ -317,7 +317,7 @@ int max(int depth, int bestScore) {
 	moveGen(0, depth);
 	int best = -20000, score, ma, mb, mi, mj;
 	char temp;
-	if (check4winner() != -1) return (check4winner());
+	if (check4winner() != -1) return (check4winner() - depth);
 	if (depth == maxDepth) return (evaluate(depth));
 	for (int i = 0; i < mv[depth][0]; i++) {
 		//if move is capture
@@ -396,14 +396,14 @@ int evaluate(int depth) {
 			switch (gb[i][j]) {
 			case 'k': total = total - 5000 - depth; break;
 			case 'K': total = total + 5000 - depth; break;
-			case 'b': total = total - 7; break;
-			case 'B': total = total + 7; break;
-			case 'n': total = total - 5; break;
-			case 'N': total = total + 5; break;
-			case 'r': total = total - 3; break;
-			case 'R': total = total + 3; break;
-			case 'p': total = total - 2; break;
-			case 'P': total = total + 2; break;
+			case 'b': total = total - 5; break;
+			case 'B': total = total + 5; break;
+			case 'n': total = total - 6; break;
+			case 'N': total = total + 6; break;
+			case 'r': total = total - 4; break;
+			case 'R': total = total + 4; break;
+			case 'p': total = total - 3; break;
+			case 'P': total = total + 3; break;
 			default: break;
 			}
 		}
@@ -1052,7 +1052,7 @@ void moveGen(int turn, int depth) {
 						}
 						if (j < 6)
 						{
-							if (gb[i - 1][j + 1] == 'P' || gb[i - 1][j + 1] == 'N' || gb[i + 1][j + 1] == 'B' ||
+							if (gb[i - 1][j + 1] == 'P' || gb[i - 1][j + 1] == 'N' || gb[i - 1][j + 1] == 'B' ||
 								gb[i - 1][j + 1] == 'R' || gb[i - 1][j + 1] == 'K')
 							{
 								mvCol = mv[depth][0] * mvSize;
