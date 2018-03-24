@@ -3,7 +3,6 @@ Richie Schiano
 CSc 180
 Project 2
 Name: Blind Man
-
 */
 #include <iostream>
 #include <stdlib.h>
