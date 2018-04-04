@@ -121,7 +121,7 @@ void makeMove() {
 			gb[ma][mb] = '-';
 			score = min(depth + 1, best);
 		//	cout << ma << mb << " " << mi << mj << endl;
-		  cout << "Score: " << score << endl;
+		//  cout << "Score: " << score << endl;
 			if (score > best) {
 				myMove = i;
 				best = score;
@@ -146,7 +146,7 @@ void makeMove() {
 			gb[ma][mb] = '-';
 			score = min(depth + 1, best);
 		//	cout << ma << mb << " " << mi << mj << endl;
-			cout << "Score: " << score << endl;
+		//	cout << "Score: " << score << endl;
 			if (score > best) {
 				myMove = i;
 				best = score;
@@ -167,7 +167,7 @@ void makeMove() {
 				explode(ma, mb, depth);
 				score = min(depth + 1, best);
 			//	cout << ma << mb << " " << mi << mj << endl;
-			cout << "Score: " << score << endl;
+			//cout << "Score: " << score << endl;
 				if (score > best) {
 					myMove = i;
 					best = score;
