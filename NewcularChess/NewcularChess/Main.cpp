@@ -18,7 +18,7 @@ int maxDepth = 5;
 int min(int depth, int bestScore);
 int max(int depth, int bestScore);
 int evaluate(int depth);
-int check4winner();
+int check4winner(int depth);
 void moveGen(int turn, int depth);
 void boardInit();
 void printBoard();
@@ -121,7 +121,7 @@ void makeMove() {
 			gb[ma][mb] = '-';
 			score = min(depth + 1, best);
 		//	cout << ma << mb << " " << mi << mj << endl;
-		//  cout << "Score: " << score << endl;
+		  cout << "Score: " << score << endl;
 			if (score > best) {
 				myMove = i;
 				best = score;
@@ -146,7 +146,7 @@ void makeMove() {
 			gb[ma][mb] = '-';
 			score = min(depth + 1, best);
 		//	cout << ma << mb << " " << mi << mj << endl;
-		//	cout << "Score: " << score << endl;
+			cout << "Score: " << score << endl;
 			if (score > best) {
 				myMove = i;
 				best = score;
@@ -167,7 +167,7 @@ void makeMove() {
 				explode(ma, mb, depth);
 				score = min(depth + 1, best);
 			//	cout << ma << mb << " " << mi << mj << endl;
-				cout << "Score: " << score << endl;
+			cout << "Score: " << score << endl;
 				if (score > best) {
 					myMove = i;
 					best = score;
@@ -231,7 +231,7 @@ void makeMove() {
 		gb[mj][mi] = gb[mb][ma];
 		gb[mb][ma] = '-';
 	}
-	//cout << "My move is: " << a << c << " " << b << d << endl;
+	cout << "Move:" << a << c << " " << b << d << endl;
 	moveTranslator(ma, mb, mi, mj);
 }
 
@@ -239,7 +239,7 @@ void makeMove() {
 int min(int depth, int bestScore) {
 	int best = 20000, score, ma, mb, mi, mj;
 	char temp;
-	if (check4winner() != -1) return (check4winner() + depth);
+	if (check4winner(depth) != -1) return (check4winner(depth));
 	if (depth == maxDepth) return (evaluate(depth));
 	moveGen(1, depth);
 	for (int i = 0; i < mv[depth][0]; i++) {
@@ -317,7 +317,7 @@ int max(int depth, int bestScore) {
 	moveGen(0, depth);
 	int best = -20000, score, ma, mb, mi, mj;
 	char temp;
-	if (check4winner() != -1) return (check4winner() - depth);
+	if (check4winner(depth) != -1) return (check4winner(depth));
 	if (depth == maxDepth) return (evaluate(depth));
 	for (int i = 0; i < mv[depth][0]; i++) {
 		//if move is capture
@@ -394,7 +394,7 @@ int evaluate(int depth) {
 	for (int i = 0; i < 9; i++) {
 		for (int j = 0; j < 7; j++) {
 			switch (gb[i][j]) {
-			case 'k': total = total - 5000 - depth; break;
+			case 'k': total = total - 5000 + depth; break;
 			case 'K': total = total + 5000 - depth; break;
 			case 'b': total = total - 5; break;
 			case 'B': total = total + 5; break;
@@ -411,12 +411,12 @@ int evaluate(int depth) {
 	return total;
 }
 
-int check4winner() {
+int check4winner(int depth) {
 	int total = -1;
 	for (int i = 0; i < 9; i++) {
 		for (int j = 0; j < 7; j++) {
-			if (gb[i][j] == 'k') total = total - 5000;
-			if (gb[i][j] == 'K') total = total + 5000;
+			if (gb[i][j] == 'k') total = total - 5000 + depth;
+			if (gb[i][j] == 'K') total = total + 5000 - depth;
 		
 		}
 	} 
@@ -425,13 +425,18 @@ int check4winner() {
 }
 void checkGameOver() {
 	char gameOver;
-	if (check4winner() == -5000) {
+	if (check4winner(0) == -5000) {
 		cout << "You Win!" << endl;
 		cin >> gameOver;
 		exit(0);
 	}
-	else if (check4winner() == 5000) {
+	else if (check4winner(0) == 5000) {
 		cout << "I Win!" << endl;
+		cin >> gameOver;
+		exit(0);
+	}
+	else if (mv[0][0] == 0) {
+		cout << "No moves available!" << endl;
 		cin >> gameOver;
 		exit(0);
 	}
@@ -542,7 +547,7 @@ void moveGen(int turn, int depth) {
 				switch (p)
 				{
 				case 'P':
-					
+
 
 					if (i < 8) {
 						if (gb[i + 1][j] == '-')
@@ -594,7 +599,7 @@ void moveGen(int turn, int depth) {
 					mv[depth][0]++;
 					break;
 				case 'N':
-				
+
 
 					if (i + 2 <= 8 && j + 1 <= 6) {
 						if (gb[i + 2][j + 1] == '-') {
@@ -756,7 +761,7 @@ void moveGen(int turn, int depth) {
 					mv[depth][0]++;
 					break;
 				case 'R':
-				
+
 
 					forward = true;
 					left = true;
@@ -867,7 +872,7 @@ void moveGen(int turn, int depth) {
 					mv[depth][0]++;
 					break;
 				case 'B':
-					
+
 
 					fdl = true;
 					fdr = true;
@@ -991,7 +996,7 @@ void moveGen(int turn, int depth) {
 					mv[depth][0]++;
 					break;
 				case 'K':
-					
+
 					if (i + 1 <= 8) {
 						if (gb[i + 1][j] == '-') {
 
@@ -1003,11 +1008,30 @@ void moveGen(int turn, int depth) {
 							mv[depth][mvCol + 5] = j;
 							mv[depth][0]++;
 						}
+						if (gb[i + 1][j] == 'k' || gb[i + 1][j] == 'r' || gb[i + 1][j] == 'b' || gb[i + 1][j] == 'p' || gb[i + 1][j] == 'n') {
+
+							mvCol = mv[depth][0] * mvSize;
+							mv[depth][mvCol + 1] = 1;
+							mv[depth][mvCol + 2] = i;
+							mv[depth][mvCol + 3] = j;
+							mv[depth][mvCol + 4] = i + 1;
+							mv[depth][mvCol + 5] = j;
+							mv[depth][0]++;
+						}
 					}
 					if (i + 1 <= 8 && j + 1 <= 6) {
 						if (gb[i + 1][j + 1] == '-') {
 							mvCol = mv[depth][0] * mvSize;
 							mv[depth][mvCol + 1] = 0;
+							mv[depth][mvCol + 2] = i;
+							mv[depth][mvCol + 3] = j;
+							mv[depth][mvCol + 4] = i + 1;
+							mv[depth][mvCol + 5] = j + 1;
+							mv[depth][0]++;
+						}
+						if (gb[i + 1][j + 1] == 'k' || gb[i + 1][j + 1] == 'r' || gb[i + 1][j + 1] == 'b' || gb[i + 1][j + 1] == 'p' || gb[i + 1][j + 1] == 'n') {
+							mvCol = mv[depth][0] * mvSize;
+							mv[depth][mvCol + 1] = 1;
 							mv[depth][mvCol + 2] = i;
 							mv[depth][mvCol + 3] = j;
 							mv[depth][mvCol + 4] = i + 1;
@@ -1026,7 +1050,18 @@ void moveGen(int turn, int depth) {
 							mv[depth][mvCol + 5] = j - 1;
 							mv[depth][0]++;
 						}
+						if (gb[i + 1][j - 1] == 'k' || gb[i + 1][j - 1] == 'r' || gb[i + 1][j - 1] == 'b' || gb[i + 1][j - 1] == 'p' || gb[i + 1][j - 1] == 'n') {
+
+							mvCol = mv[depth][0] * mvSize;
+							mv[depth][mvCol + 1] = 1;
+							mv[depth][mvCol + 2] = i;
+							mv[depth][mvCol + 3] = j;
+							mv[depth][mvCol + 4] = i + 1;
+							mv[depth][mvCol + 5] = j - 1;
+							mv[depth][0]++;
+						}
 					}
+
 					break;
 				default:
 					break;
@@ -1088,7 +1123,7 @@ void moveGen(int turn, int depth) {
 					mv[depth][0]++;
 					break;
 				case 'n':
-					
+
 					if (i - 2 >= 0 && j + 1 <= 6) {
 						if (gb[i - 2][j + 1] == '-') {
 
@@ -1250,7 +1285,7 @@ void moveGen(int turn, int depth) {
 					mv[depth][0]++;
 					break;
 				case 'r':
-					
+
 					forward = true;
 					left = true;
 					right = true;
@@ -1360,7 +1395,7 @@ void moveGen(int turn, int depth) {
 					mv[depth][0]++;
 					break;
 				case 'b':
-				
+
 					fdl = true;
 					fdr = true;
 					bdl = true;
@@ -1485,12 +1520,24 @@ void moveGen(int turn, int depth) {
 					mv[depth][0]++;
 					break;
 				case 'k':
-				
+
 					if (i - 1 >= 0) {
 						if (gb[i - 1][j] == '-') {
 
 							mvCol = mv[depth][0] * mvSize;
 							mv[depth][mvCol + 1] = 0;
+							mv[depth][mvCol + 2] = i;
+							mv[depth][mvCol + 3] = j;
+							mv[depth][mvCol + 4] = i - 1;
+							mv[depth][mvCol + 5] = j;
+							mv[depth][0]++;
+
+
+						}
+						if (gb[i - 1][j] == 'R' || gb[i - 1][j] == 'B' || gb[i - 1][j] == 'K' || gb[i - 1][j] == 'N' || gb[i - 1][j] == 'P') {
+
+							mvCol = mv[depth][0] * mvSize;
+							mv[depth][mvCol + 1] = 1;
 							mv[depth][mvCol + 2] = i;
 							mv[depth][mvCol + 3] = j;
 							mv[depth][mvCol + 4] = i - 1;
@@ -1511,6 +1558,16 @@ void moveGen(int turn, int depth) {
 							mv[depth][mvCol + 5] = j + 1;
 							mv[depth][0]++;
 						}
+						if (gb[i - 1][j + 1] == 'R' || gb[i - 1][j + 1] == 'B' || gb[i - 1][j + 1] == 'K' || gb[i - 1][j + 1] == 'N' || gb[i - 1][j + 1] == 'P') {
+
+							mvCol = mv[depth][0] * mvSize;
+							mv[depth][mvCol + 1] = 1;
+							mv[depth][mvCol + 2] = i;
+							mv[depth][mvCol + 3] = j;
+							mv[depth][mvCol + 4] = i - 1;
+							mv[depth][mvCol + 5] = j + 1;
+							mv[depth][0]++;
+						}
 					}
 					if (i - 1 >= 0 && j - 1 >= 0) {
 						if (gb[i - 1][j - 1] == '-') {
@@ -1523,23 +1580,27 @@ void moveGen(int turn, int depth) {
 							mv[depth][mvCol + 5] = j - 1;
 							mv[depth][0]++;
 						}
+						if (gb[i - 1][j - 1] == 'R' || gb[i - 1][j - 1] == 'B' || gb[i - 1][j - 1] == 'K' || gb[i - 1][j - 1] == 'N' || gb[i - 1][j - 1] == 'P') {
+
+							mvCol = mv[depth][0] * mvSize;
+							mv[depth][mvCol + 1] = 1;
+							mv[depth][mvCol + 2] = i;
+							mv[depth][mvCol + 3] = j;
+							mv[depth][mvCol + 4] = i - 1;
+							mv[depth][mvCol + 5] = j - 1;
+							mv[depth][0]++;
+						}
 					}
-					mvCol = mv[depth][0] * mvSize;
-					mv[depth][mvCol + 1] = 2;
-					mv[depth][mvCol + 2] = i;
-					mv[depth][mvCol + 3] = j;
-					mv[depth][mvCol + 4] = i;
-					mv[depth][mvCol + 5] = j;
-					mv[depth][0]++;
+
 					break;
 				default:
 					break;
 				}
 			}
-
 		}
 	}
 }
+	
 
 void printMoves() {
 	if (mv[0][0] > -1) {
